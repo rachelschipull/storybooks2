@@ -35,7 +35,7 @@ try {
     res.render('stories/index', {
         stories,
     })
-    } catch (err) {
+  } catch (err) {
     console.error(err)
     res.render('error/500')
 }
@@ -56,12 +56,12 @@ try {
     } else {
         res.render('stories/show', {
         story,
-    })
+      })
     }
-    } catch (err) {
-        console.error(err)
-        res.render('error/404')
-    }
+  } catch (err) {
+      console.error(err)
+      res.render('error/404')
+  }
 })
 
 // @desc    Show edit page
