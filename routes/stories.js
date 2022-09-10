@@ -23,7 +23,7 @@ router.post('/', ensureAuth, async (req, res) => {
     }
 })
 
-// @desc    Show all stories
+// @desc    Show all public stories
 // @route   GET /stories
 router.get('/', ensureAuth, async (req, res) => {
 try {
@@ -31,7 +31,6 @@ try {
         .populate('user')
         .sort({ createdAt: 'desc' })
         .lean()
-
     res.render('stories/index', {
         stories,
     })
@@ -51,13 +50,10 @@ try {
         return res.render('error/404')
     }
 
-    if (story.user._id != req.user.id && story.status == 'private') {
-        res.render('error/404')
-    } else {
-        res.render('stories/show', {
+    res.render('stories/show', {
         story,
-      })
-    }
+    })
+    
   } catch (err) {
       console.error(err)
       res.render('error/404')
@@ -119,18 +115,8 @@ router.put('/:id', ensureAuth, async (req, res) => {
 // @route   DELETE /stories/:id
 router.delete('/:id', ensureAuth, async (req, res) => {
   try {
-    let story = await Story.findById(req.params.id).lean()
-
-    if (!story) {
-      return res.render('error/404')
-    }
-
-    if (story.user != req.user.id) {
-      res.redirect('/stories')
-    } else {
-      await Story.remove({ _id: req.params.id })
+    await Story.remove({_id: req.params.id})
       res.redirect('/dashboard')
-    }
   } catch (err) {
     console.error(err)
     return res.render('error/500')
